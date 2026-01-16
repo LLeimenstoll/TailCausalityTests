@@ -19,6 +19,17 @@ the same GPL-3.0 license, with minor modifications:
   - add additional simualtion study for percentage of wrong causal inference 
     between two variables
 
+An adapeted version of the causal_tail_coefficient function is located in functions.R`, with minor modifications:
+
+- add of min argument to analyse the lower tail
+
+And a modified version from:
+O. C. Pasche, V. Chavez-Demoulin and A. C. Davison. 2020.
+https://github.com/opasche/ExtremalCausalModelling 
+License: GPL-3.0
+
+The adapeted functions are located in functions.R`, with minor modifications:
+- Change of test statistic in caustal_tail_perumation_test to test two sided
 
 ## Data sources and preprocessing
 
