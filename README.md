@@ -42,12 +42,12 @@ This repository contains three main applications of the causal tail tests, each 
 - **Train operations (expected and actual departure/arrival times)**  
   Open public transport data from:
   - opentransportdata.swiss: https://opentransportdata.swiss  
-    (real-time / historical timetable and operational data for Swiss trains)
+    (real-time / historical timetable and operational data for Swiss trains), downloaded on 13.08.2024
 
 - **Precipitation (Zurich)**  
   Hourly precipitation data from:
   - MeteoSchweiz (MeteoSwiss): https://www.meteoswiss.admin.ch  
-    (Swiss Federal Office of Meteorology and Climatology)
+    (Swiss Federal Office of Meteorology and Climatology), downloaded on 14.08.2024
 
 
 **How to obtain the data**
@@ -77,6 +77,9 @@ The corresponding R code is located in `Application/train_processing/` and `Appl
 - **River discharge (daily/instantaneous flows)**  
   - Bayerisches Landesamt für Umwelt (LfU): https://www.lfu.bayern.de  
     (river gauge data, e.g. Danube at Passau, Main at Würzburg/Schweinfurt)
+    - Donau/Passau, download on 25.11.2024
+    - Main/Würzburg, download on 26.11.2024
+    - Main/Schweinfurt, download on 03.09.2025
 
 - **Precipitation (daily totals)**  
   - Deutscher Wetterdienst (DWD): https://www.dwd.de  
@@ -86,10 +89,7 @@ The corresponding R code is located in `Application/train_processing/` and `Appl
 
 1. **River discharge data**
 
-   - From the LfU portal, download discharge time series for:
-     - Donau/Passau,
-     - Main/Würzburg,
-     - Main/Schweinfurt.
+   - From the LfU portal, download discharge time series
    - Export them as CSV and place under `Application/data/` (e.g. `Passau.csv`, `Wurzburg.csv`, `Schweinfurth.csv`).
 
 2. **Precipitation data**
@@ -114,6 +114,7 @@ The corresponding R code can be found in:
 - **Bitcoin prices**  
   - Coin Metrics: https://coinmetrics.io  
     (e.g. daily close prices from their market data CSV/API)
+    donwloaded on 06.12.2024
 
 - **Volatility and equity indices as confounders**
 
@@ -122,6 +123,7 @@ The corresponding R code can be found in:
   - MSCI Europe Index:
     - MSCI (2023) – daily index levels (MSCI Europe).
       - Must be obtained from MSCI’s data services, stored locally (e.g. `Application/data/MSCI_eu.csv`).
+      - Downloaded on 08.05.2025
 
 **How to obtain the data**
 
