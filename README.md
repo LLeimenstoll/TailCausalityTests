@@ -21,7 +21,7 @@ This repository contains three main applications of the causal tail tests, each 
   - Download historical operational data for the relevant period (May 2021–July 2024).
   - In the code, this data is read and filtered in:
     - `Application/train_processing/01_filter_train_data_switzerland.R`
-    - `Application/train_processing/02_prep_train_data_switzerland.R`
+    
 
 - **Precipitation**  
   Hourly precipitation data from:
@@ -30,7 +30,7 @@ This repository contains three main applications of the causal tail tests, each 
   - Obtain hourly precipitation measurements for the Zurich station (e.g. station code `REH`) from the MeteoSwiss data portal.  
   - Store these data files under `Application/data/weather/`.  
   - Matching of train delays to hourly precipitation is performed in:
-    - `Application/train_processing/03_match_train_weather.R`
+   - `Application/train_processing/02_prep_train_data_switzerland.R`
 
 The corresponding R code is located in `Application/train_processing/` and `Application/`.  
 The final merged dataset is written as `Application/data/data_combined_train_weather.csv` (not included in the repository).
