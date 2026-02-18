@@ -4,7 +4,11 @@ Code for the paper **"General tests for pairwise causality in extremes"** by Lis
 
 It includes:
 - Simulation studies for causal tail tests in R in `Siumlation_Study/`,
-- Applications to train delays, river flows, and financial data in `Application/`,
+- Applications to train delays, river flows, and financial data in `Application/`
+
+## Abstract 
+
+Recent flooding and heat waves as well as financial and economic crises have highlighted the need for a better understanding of climate and market extremes. We are particularly interested in the causal effects between pairwise tail events as measured by the Causal Tail Coefficient, CTC (see Gnecco et al. (2021)). We contribute to the literature with theoretical results for the CTC in settings where the involved tail distributions differ, as is typically the case in practice. Building on these results, we propose tail tests that can uncover different underlying scenarios and make it possible to detect the presence and direction of causal tail effects, as well as reveal confounding effects when tail indices differ. With a comprehensive simulation study, we investigate the reliability of the asymptotic guidance in finite samples. Finally, we exploit the generality of the theoretical results to study causal tail effects in three different application scenarios covering weather/climate and financial markets.
 
 ---
 
