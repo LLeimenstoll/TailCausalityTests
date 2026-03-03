@@ -123,7 +123,7 @@ qq_plot <- ggplot(qs, aes(x = xq, y = yq)) +
   xlab("Precipitation Quantiles") +
   ylab("River Discharge Quantiles")
 
-ggsave(paste0("pics/river_qq.pdf"), plot = qq_plot, device = "pdf",
+ggsave(paste0("figures/river_qq.pdf"), plot = qq_plot, device = "pdf",
        width = 10, height = 10, path = application_path)
 
 ###################### Build analysis data frames ###########################
@@ -274,10 +274,10 @@ for (df in dfs) {
   p1 <- pareto_hill(rain_pos, shift = shift_rain);       plot(p1$plot)
   p2 <- pareto_hill(discharge_pos, shift = shift_discharge); plot(p2$plot)
 
-  ggsave(paste0("pics/hill_plots_rain_", names(dfs)[i], ".pdf"),
+  ggsave(paste0("figures/hill_plots_rain_", names(dfs)[i], ".pdf"),
          plot  = p1$plot, device = "pdf",
          width = 14, height = 10, path = application_path)
-  ggsave(paste0("pics/hill_plots_river_", names(dfs)[i], ".pdf"),
+  ggsave(paste0("figures/hill_plots_river_", names(dfs)[i], ".pdf"),
          plot  = p2$plot, device = "pdf",
          width = 14, height = 10, path = application_path)
 
@@ -427,7 +427,7 @@ conv_plot <- ggplot(ctcs, aes(n, CTC, color = group)) +
 
 conv_plot
 
-ggsave(paste0("pics/river_conv_plot_main_", method, ".pdf"),
+ggsave(paste0("figures/river_conv_plot_main_", method, ".pdf"),
        plot = conv_plot, device = "pdf",
        width = 14, height = 10, path = application_path)
 
@@ -519,7 +519,7 @@ bs2
 
 bs_plot <- grid.arrange(bs1, bs2, nrow = 2, ncol = 1); bs_plot
 
-ggsave(paste0("pics/river_bs_plot_danube_delta_", method, ".pdf"),
+ggsave(paste0("figures/river_bs_plot_danube_delta_", method, ".pdf"),
        plot = bs_plot, device = "pdf",
        width = 14, height = 10, path = application_path)
 
@@ -532,5 +532,6 @@ hist <- ggplot(data, aes(x = precipitation)) +
   theme_bw() +
   theme(text = element_text(size = 26))
 
-ggsave(paste0("pics/precipiation_hist.pdf"), plot = hist, device = "pdf",
+ggsave(paste0("figures/precipiation_hist.pdf"), plot = hist, device = "pdf",
        width = 8, height = 10, path = application_path)
+
