@@ -188,11 +188,11 @@ p1 <- pareto_hill(delay_pos, shift = shift_delay)
 p2 <- pareto_hill(rain_pos,  shift = shift_rain)
 p3 <- pareto_hill(rain3_pos, shift = shift_rain3)
 
-ggsave(paste0("pics/hill_plots_train_delay.pdf"), plot = p1$plot,
+ggsave(paste0("figures/hill_plots_train_delay.pdf"), plot = p1$plot,
        device = "pdf", width = 14, height = 10, path = application_path)
-ggsave(paste0("pics/hill_plots_train_rain.pdf"),  plot = p2$plot,
+ggsave(paste0("figures/hill_plots_train_rain.pdf"),  plot = p2$plot,
        device = "pdf", width = 14, height = 10, path = application_path)
-ggsave(paste0("pics/hill_plots_train_rain3.pdf"), plot = p3$plot,
+ggsave(paste0("figures/hill_plots_train_rain3.pdf"), plot = p3$plot,
        device = "pdf", width = 14, height = 10, path = application_path)
 
 # Optimal k for delay and rain tails ----------------------------------------
@@ -245,7 +245,7 @@ qq_plot <- ggplot(qs, aes(x = xq, y = yq)) +
   xlab("Precipitation Quantiles") +
   ylab("Delay Quantiles");qq_plot
 
-ggsave(paste0("pics/train_qq.pdf"), plot = qq_plot, device = "pdf",
+ggsave(paste0("figures/train_qq.pdf"), plot = qq_plot, device = "pdf",
        width = 10, height = 10, path = application_path)
 
 ##################### LiNGAM and causal discovery ###########################
@@ -368,7 +368,7 @@ conv_plot <- ggplot(ctcs, aes(n, CTC, color = group)) +
 
 conv_plot
 
-ggsave(paste0("pics/train_", method, "_3h_conv_plot.pdf"),
+ggsave(paste0("figures/train_", method, "_3h_conv_plot.pdf"),
        plot = conv_plot, device = "pdf",
        width = 14, height = 10, path = application_path)
 
@@ -457,6 +457,7 @@ bs2
 
 bs_plot <- grid.arrange(bs1, bs2, nrow = 2, ncol = 1);bs_plot
 
-ggsave(paste0("pics/train_3h_", method, "_delta_plot.pdf"),
+ggsave(paste0("figures/train_3h_", method, "_delta_plot.pdf"),
        plot = bs_plot, device = "pdf",
+
        width = 14, height = 10, path = application_path)
