@@ -128,7 +128,7 @@ p1 <- ggplot(summary_df,
   theme(text = element_text(size = 40))
 p1
 
-ggsave("pics/confounder_test_sim_caseC.pdf", plot = p1, device = "pdf",
+ggsave("figures/confounder_test_sim_caseC.pdf", plot = p1, device = "pdf",
        width = 14, height = 8, path = simulation_path)
 
 # ---------------------------------------------------------------------------
@@ -163,5 +163,6 @@ p2 <- ggplot(summary_df,
   theme(text = element_text(size = 40))
 p2
 
-ggsave("pics/confounder_test_sim_caseD.pdf", plot = p2, device = "pdf",
+ggsave("figures/confounder_test_sim_caseD.pdf", plot = p2, device = "pdf",
+
        width = 14, height = 8, path = simulation_path)
