@@ -123,7 +123,7 @@ plot_conf_test <- function(data, case_name) {
   
   # Save plot 1 -------------------------------------------------------------
   ggsave(
-    paste0("pics/tailh_", case_name, "_k39.pdf"),
+    paste0("figures/tailh_", case_name, "_k39.pdf"),
     plot   = p1,
     device = "pdf",
     width  = 14,
@@ -153,7 +153,7 @@ plot_conf_test <- function(data, case_name) {
   
   # Save plot 2 -------------------------------------------------------------
   ggsave(
-    paste0("pics/tail12_", case_name, "_k39.pdf"),
+    paste0("figures/tail12_", case_name, "_k39.pdf"),
     plot   = p2,
     device = "pdf",
     width  = 14,
@@ -263,4 +263,5 @@ print(
   xtable(summary_pct),
   include.rownames = FALSE,
   sanitize.text.function = identity
+
 )
