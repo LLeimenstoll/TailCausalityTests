@@ -206,7 +206,8 @@ p2 <- ggplot(ctcs_1, aes(x = n, y = linDir, color = group)) +
 p2
 
 # Save plots ----------------------------------------------------------------
-ggsave("pics/pretest_pic.png", plot = p1, device = "png",
+ggsave("figures/pretest_pic.png", plot = p1, device = "png",
        width = 14, height = 8, path = simulation_path)
-ggsave("pics/lingam_pic.png", plot = p2, device = "png",
+ggsave("figures/lingam_pic.png", plot = p2, device = "png",
+
        width = 14, height = 8, path = simulation_path)
