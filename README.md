@@ -12,6 +12,45 @@ Recent flooding and heat waves as well as financial and economic crises have hig
 
 ---
 
+## R code structure (scripts and simulations)
+
+The R code is organized as follows:
+
+### Core methods
+
+- `functions.R`  
+  Helper functions for tail indices, causal tail coefficients, and tests.
+
+- `testing_strategy.R`  
+  Functions to test for causal tail direction and confounding.
+
+### Simulation studies
+
+The following scripts in `Application/Simulation_Study/` generate the results reported in Section 3 of the paper, ordered according to the section numbering:
+
+- `convergence_simulation.R`  
+  Produces the results in **Section 3.1 (Finite sample rate of convergence)**.
+
+- `simulation_study_configurations.R`  
+  Generates the simulation data for **Section 3.2 (Test evaluation for different configurations)**.
+
+- `simulation_study_configurations_evaluation.R`  
+  Produces the results and plots for **Section 3.2 (Test evaluation for different configurations)**.
+
+- `pretest_simulation.R`  
+  Produces the results in **Section 3.2.2 (Pre-test simulation)**.
+
+- `confounder_simulation.R`  
+  Produces the results in **Section 3.2.2 (Confounder test simulation)**.
+
+- `k_simulation.R`  
+  Produces the results in **Section 3.3 (Choice of the best value of k)**.
+
+- `lingam_pretest_comp.R`  
+  Produces the results in **Section 3.4 (Comparison of methods capturing causality in the mean)**.
+
+---
+
 ## Data sources and preprocessing
 
 This repository contains three main applications of the causal tail tests, each based on external data sources. The code in this repository does **not** redistribute the raw data. Instead, we provide scripts to download (where possible) or describe how to obtain the data, and to reproduce the preprocessing steps.
@@ -87,44 +126,6 @@ The main R code for this application is located in:
 
 ---
 
-## R code structure (scripts and simulations)
-
-The R code is organized as follows:
-
-### Core methods
-
-- `functions.R`  
-  Helper functions for tail indices, causal tail coefficients, and tests.
-
-- `testing_strategy.R`  
-  Functions to test for causal tail direction and confounding.
-
-### Simulation studies
-
-The following scripts in `Application/Simulation_Study/` generate the results reported in Section 3 of the paper, ordered according to the section numbering:
-
-- `convergence_simulation.R`  
-  Produces the results in **Section 3.1 (Finite sample rate of convergence)**.
-
-- `simulation_study_configurations.R`  
-  Generates the simulation data for **Section 3.2 (Test evaluation for different configurations)**.
-
-- `simulation_study_configurations_evaluation.R`  
-  Produces the results and plots for **Section 3.2 (Test evaluation for different configurations)**.
-
-- `pretest_simulation.R`  
-  Produces the results in **Section 3.2.2 (Pre-test simulation)**.
-
-- `confounder_simulation.R`  
-  Produces the results in **Section 3.2.2 (Confounder test simulation)**.
-
-- `k_simulation.R`  
-  Produces the results in **Section 3.3 (Choice of the best value of k)**.
-
-- `lingam_pretest_comp.R`  
-  Produces the results in **Section 3.4 (Comparison of methods capturing causality in the mean)**.
-
----
 
 ## External code and license
 
