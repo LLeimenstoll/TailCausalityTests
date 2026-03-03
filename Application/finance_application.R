@@ -108,7 +108,7 @@ qq_plot <- ggplot(qs, aes(x = xq, y = yq)) +
   xlab("S&P 500 Quantiles") +
   ylab("BTC Quantiles");qq_plot
 
-ggsave("pics/finance_qq.pdf", plot = qq_plot, device = "pdf",
+ggsave("figures/finance_qq.pdf", plot = qq_plot, device = "pdf",
        width = 10, height = 10, path = application_path)
 
 ############# Equal tail index test (BTC vs S&P) ############################
@@ -134,11 +134,11 @@ p1 <- pareto_hill(sp_pos,  shift = shift_sp_pos)
 p2 <- pareto_hill(sp_neg,  shift = shift_sp_neg)
 p3 <- pareto_hill(btc_pos, shift = shift_btc_pos)
 p4 <- pareto_hill(btc_neg, shift = shift_btc_neg)
-ggsave("pics/hill_plots_sp_neg.pdf",  plot = p2$plot, device = "pdf",
+ggsave("figures/hill_plots_sp_neg.pdf",  plot = p2$plot, device = "pdf",
        width = 14, height = 10, path = application_path)
-ggsave("pics/hill_plots_btc_pos.pdf", plot = p3$plot, device = "pdf",
+ggsave("figures/hill_plots_btc_pos.pdf", plot = p3$plot, device = "pdf",
        width = 14, height = 10, path = application_path)
-ggsave("pics/hill_plots_btc_neg.pdf", plot = p4$plot, device = "pdf",
+ggsave("figures/hill_plots_btc_neg.pdf", plot = p4$plot, device = "pdf",
        width = 14, height = 10, path = application_path)
 
 # Optimal k selection for Hill estimator ------------------------------------
@@ -346,7 +346,7 @@ conv_plot <- ggplot(ctcs, aes(n, CTC, color = group)) +
 
 conv_plot
 
-ggsave("pics/finance_conv_plot_left.pdf", plot = conv_plot, device = "pdf",
+ggsave("figures/finance_conv_plot_left.pdf", plot = conv_plot, device = "pdf",
        width = 14, height = 10, path = application_path)
 
 ################################################################################
@@ -546,7 +546,7 @@ bs2
 
 bs_plot <- grid.arrange(bs1, bs2, nrow = 2, ncol = 1); bs_plot
 
-ggsave("pics/finance_conf_delta_plot_right.pdf", plot = bs_plot, device = "pdf",
+ggsave("figures/finance_conf_delta_plot_right.pdf", plot = bs_plot, device = "pdf",
        width = 14, height = 10, path = application_path)
 
 ####################  Convergence with confounder ###########################
@@ -621,5 +621,6 @@ conv_plot <- ggplot(ctcs, aes(n, CTC, color = group)) +
 
 conv_plot
 
-ggsave("pics/finance_conf_conv_plot_left.pdf", plot = conv_plot, device = "pdf",
+ggsave("figures/finance_conf_conv_plot_left.pdf", plot = conv_plot, device = "pdf",
+
        width = 14, height = 10, path = application_path)
