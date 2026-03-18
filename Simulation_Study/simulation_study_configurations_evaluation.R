@@ -115,8 +115,8 @@ plot_conf_test <- function(data, case_name) {
     ) +
     facet_wrap(~ dfh_factor, labeller = dfh_labels) +
     labs(
-      x = expression(beta["H" %->% "X"[1]]),
-      y = expression(beta["H" %->% "X"[2]])
+      x = expression(beta["H 1"]),
+      y = expression(beta["H 2"])
     ) +
     theme_minimal() +
     theme(text = element_text(size = 40))
@@ -145,8 +145,8 @@ plot_conf_test <- function(data, case_name) {
       labeller = label_parsed
     ) +
     labs(
-      x = expression(beta["H" %->% 1]),
-      y = expression(beta["H" %->% 2])
+      x = expression(beta["H 1" ]),
+      y = expression(beta["H 2"])
     ) +
     theme_minimal() +
     theme(text = element_text(size = 40))
