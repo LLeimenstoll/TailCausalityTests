@@ -514,14 +514,14 @@ LGPD_causal_tail_coeff <- function(X1, X2, H, k = NULL, threshold_q = 0.95,
   #Fit POT GPD model and compute the fitted cdf in the data points for X2
   u2 <- quantile(X2,threshold_q)
   fit2 <- gpd.fit(X2,threshold=u2,ydat=as.matrix(Hcs),sigl=1, show=FALSE)
-  FX2 <- pgpd(X2, loc=u2, scale=pmax(fit2$mle+fit2$mle*Hcs,0.0001)[1:length(Hcs)], shape=fit2$mle)
+  FX2 <- pgpd(X2, loc=u2, scale=pmax(fit2$mle[1]+fit2$mle[2]*Hcs,0.0001)[1:length(Hcs)], shape=fit2$mle[3])
   FX2 <- (FX2*(1-threshold_q)+threshold_q)*(X2>=u2) + r2/n * (X2<u2)
   #Compute the parametric causal tail coefficient
   if(parametric_F1){
     #Fit POT GPD model and compute the fitted cdf in the data points for X1
     u1 <- quantile(X1,threshold_q)
     fit1 <- gpd.fit(X1,threshold=u1,ydat=as.matrix(Hcs),sigl=1, show=FALSE)
-    FX1 <- pgpd(X1, loc=u1, scale=pmax(fit1$mle+fit1$mle*Hcs,0.0001)[1:length(Hcs)], shape=fit1$mle)
+    FX1 <- pgpd(X1, loc=u1, scale=pmax(fit1$mle[1]+fit1$mle[2]*Hcs,0.0001)[1:length(Hcs)], shape=fit1$mle[3])
     FX1 <- (FX1*(1-threshold_q)+threshold_q)*(X1>=u1) + r1/n * (X1<u1)
     #Compute the parametric causal tail coefficient
     ctc <- mean(FX2[FX1 > (1-k/n)]) #not always exactly k excesses for parametric approach
