@@ -337,7 +337,7 @@ conv_plot <- ggplot(ctcs, aes(n, CTC, color = group)) +
                     guide  = guide_legend(ncol = 3)) +
   labs(color = 'Causal Direction') +
   xlab("Sample Size") +
-  ylab("Causal Tail Coefficent") +
+  ylab("Causal Tail Coefficient") +
   ylim(c(0, 1)) +
   geom_hline(yintercept = 0.5, linetype = "dashed", color = "black") +
   geom_hline(yintercept = 1,   linetype = "dashed", color = "black") +
@@ -612,7 +612,7 @@ conv_plot <- ggplot(ctcs, aes(n, CTC, color = group)) +
                     guide  = guide_legend(ncol = 3)) +
   labs(color = 'Causal Direction') +
   xlab("Sample Size") +
-  ylab("Causal Tail Coefficent") +
+  ylab("Causal Tail Coefficient") +
   ylim(c(0, 1)) +
   geom_hline(yintercept = 0.5, linetype = "dashed", color = "black") +
   geom_hline(yintercept = 1,   linetype = "dashed", color = "black") +
