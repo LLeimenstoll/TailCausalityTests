@@ -551,7 +551,7 @@ ggsave("figures/finance_conf_delta_plot_right.pdf", plot = bs_plot, device = "pd
 
 ####################  Convergence with confounder ###########################
 n_vals<-seq(1500,nrow(data_ieur),100)
-ctcs <- matrix(nrow = length(n_vals) * 2 * length(ks), ncol = 3)
+ctcs <- matrix(nrow = length(n_vals) * 3 * length(ks), ncol = 3)
 i    <- 1
 
 for (k1 in ks) {
@@ -566,17 +566,21 @@ for (k1 in ks) {
       h <- -as.numeric(data_ieur[s, "IEUR.res"])
       ctc_1[r] <- LGPD_causal_tail_coeff(x, y, H = h, k = k1)
       ctc_2[r] <- LGPD_causal_tail_coeff(y, x, H = h, k = k1)
+      delta[r] <- ctc_1[r] - ctc_2[r]
     }
     ctcs[i, 2]     <- mean(ctc_1)
     ctcs[i + 1, 2] <- mean(ctc_2)
+    ctcs[i + 2, 2] <- mean(delta)
     
     ctcs[i, 1]     <- paste0("S&P500 \u2192 BC (k=", k1, ")")
     ctcs[i + 1, 1] <- paste0("BC \u2192 S&P500 (k=", k1, ")")
+    ctcs[i + 2, 1] <- paste0("delta (k=", k1, ")")
     
     ctcs[i, 3]     <- paste0(n)
     ctcs[i + 1, 3] <- paste0(n)
+    ctcs[i + 2, 3] <- paste0(n)
     
-    i <- i + 2
+    i <- i + 3
   }
 }
 
@@ -589,9 +593,10 @@ ctcs$group <- factor(
   ctcs$group,
   levels = c(
     "S&P500 \u2192 BC (k=26)", "BC \u2192 S&P500 (k=26)",
-    "S&P500 \u2192 BC (k=60)", "BC \u2192 S&P500 (k=60)"
-  )
+    "S&P500 \u2192 BC (k=60)", "BC \u2192 S&P500 (k=60)",
+    "delta (k=26)","delta (k=60)")
 )
+
 
 # Reuse pd, shapes, cols, labels_cust from before --------------------------
 conv_plot <- ggplot(ctcs, aes(n, CTC, color = group)) +
