@@ -48,7 +48,7 @@ for (df in dfs) {
     # X1 <- e1 + beta_h1 * H
     # X2 <- e2 + beta_1 * X1 + beta_h2 * H
     
-    # Without confounder (use for case 3) -------------------------------------
+    # Without confounder -------------------------------------
     X1 <- e1
     X2 <- e2 + beta_1 * X1
     
