@@ -703,7 +703,7 @@ theme_set(theme_bw() +
 ### CONSTANTS ####
 SIMULATION_K <- sim0_file
 
-SID_KVARYING <- "Simulation_Study/figures/k_sim_SID.pdf"
+SID_KVARYING <- "Simulation_Study/pics/k_sim_SID.pdf"
 tolPalette <- c(tolBlue = "#4477AA",
                 tolRed = "#EE6677",
                 tolGreen = "#228833",
@@ -864,6 +864,5 @@ g <- ggplot(wrong_dir_data) +
 
 g
 
-ggsave("Simulation_Study/figures/k_sim_wrong_percentage.pdf", g,
+ggsave("Simulation_Study/pics/k_sim_wrong_percentage.pdf", g,
        width = 7.5, height = 5, units = "in")
-

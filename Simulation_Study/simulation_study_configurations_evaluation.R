@@ -10,172 +10,212 @@ setwd()
 simulation_path <- "Simulation_Study/"
 
 # Load simulation results (cases 1–4, various df and beta values) ----------
-res_df <- read.csv(paste0(simulation_path, "output/results_cases_k39.csv"))
+res_df <- read.csv(paste0(simulation_path, "output/results_systematic_simulation.csv"))
 head(res_df)
-
+res_df$dfh<-as.numeric(res_df$dfh)
 # ---------------------------------------------------------------------------
-# Pre-Test evaluation 
+# Causality-Test evaluation
 # ---------------------------------------------------------------------------
 
-# Pretest without confounder ------------------------------------------------
-pre_test <- res_df[, c("case", "pretest")]
-t1 <- table(pre_test)
-round(prop.table(t1, margin = 1) * 100, 2)  # % of rejections per case
+# clear res_df where scenario is E or F and confounder is not heavier tailed 
+res_df_1<-res_df[!(res_df$scenario %in% c("E", "F") &
+                 pmin(res_df$df1, res_df$df2) == 2), ]
+summary(res_df_1)
+# Causality-Test without confounder ------------------------------------------------
+causality_summary <- res_df_1 %>%
+  mutate(decision = ifelse(p_val_causality <= 0.05, 1, 0)) %>%
+  group_by(df1, df2, scenario) %>%
+  summarise(
+    H1_pct = 100 * mean(decision == 1),
+    H0_pct = 100 * mean(decision == 0),
+    .groups = "drop"
+  )
 
-# Pretest with confounder --------------------------------------------------
-pre_test <- res_df[, c("case", "pretestH")]
-t1 <- table(pre_test)
-round(prop.table(t1, margin = 1) * 100, 2)
+print(causality_summary,n=44)
+# Causality-Test with confounder --------------------------------------------------
+causality_summary_conf <- res_df_1 %>%
+  mutate(decision = ifelse(p_val_causality_conf <= 0.05, 1, 0)) %>%
+  group_by(df1, df2, scenario) %>%
+  summarise(
+    H1_pct = 100 * mean(decision == 1),
+    H0_pct = 100 * mean(decision == 0),
+    .groups = "drop"
+  )
+
+print(causality_summary_conf,n=44)
+
+# Significance Level evaluation on A and B
+alpha_levels <- c(0.01, 0.025, 0.05, 0.10)
+
+causality_alpha_summary <- lapply(alpha_levels, function(a) {
+  res_df_1 %>%
+    mutate(decision = ifelse(p_val_causality <= a, 1, 0),
+           alpha = a) %>%
+    group_by(df1, df2, scenario, alpha) %>%
+    summarise(
+      H1_pct = 100 * mean(decision == 1),
+      H0_pct = 100 * mean(decision == 0),
+      .groups = "drop"
+    )
+}) %>%
+  bind_rows() %>%
+  filter(scenario %in% c("A", "B"))
+
+causality_alpha_wide <- causality_alpha_summary %>%
+  select(df1, df2, scenario, alpha, H1_pct) %>%  # z.B. nur H1_pct
+  pivot_wider(
+    names_from = alpha,
+    values_from = H1_pct,
+    names_prefix = "alpha_"
+  )
+
+causality_alpha_wide
 
 # ---------------------------------------------------------------------------
 # Confounder test: basic type I/II evaluation
 # ---------------------------------------------------------------------------
 
 # Restrict to tail index combinations where confounder test is relevant
-conf_test <- res_df[res_df$df1 > res_df$df2 & res_df$dfh <= res_df$df2,
-                    c("case", "conftest")]
-t1 <- table(conf_test)
-round(prop.table(t1, margin = 1) * 100, 2)
 
+crit <- qnorm(0.95, mean = 0, sd = sqrt(1/12))
 
+## 1) Without confounder (dfh NA)
+conf_noH <- res_df %>%
+  filter(!is.na(df1),
+         !is.na(df2),
+         is.na(dfh),
+         df1 > df2) %>%
+  mutate(decision = ifelse(Tc > crit, 1, 0)) %>%
+  group_by(df1, df2, scenario) %>%
+  summarise(
+    reject_pct = 100 * mean(decision == 1),
+    nonreject_pct = 100 * mean(decision == 0),
+    .groups = "drop"
+  )
+
+## 2) With Confounder (dfh non NA)
+conf_withH <- res_df_1 %>%
+  filter(!is.na(df1),
+         !is.na(df2),
+         !is.na(dfh),
+         df1 > df2) %>%
+  mutate(decision = ifelse(Tc > crit, 1, 0)) %>%
+  group_by(df1, df2, scenario) %>%
+  summarise(
+    reject_pct = 100 * mean(decision == 1),
+    nonreject_pct = 100 * mean(decision == 0),
+    .groups = "drop"
+  )
+
+## 3) Combine
+conf_summary <- bind_rows(conf_noH, conf_withH)
+
+conf_summary
 # ---------------------------------------------------------------------------
-# Prepare subsets by scenario / case (1–4) for alpha_1>alpha_2
+# create scatter plots for confounder-test outcomes
 # ---------------------------------------------------------------------------
-
-case1 <- res_df[res_df$case == 1 &
-                  res_df$df1 %in% c(3, 4) &
-                  res_df$df2 %in% c(2, 3) &
-                  res_df$dfh <= res_df$df2, ]
-
-case2 <- res_df[res_df$case == 2 &
-                  res_df$df1 %in% c(3, 4) &
-                  res_df$df2 %in% c(2, 3) &
-                  res_df$dfh <= res_df$df2, ]
-
-case3 <- res_df[res_df$case == 3 &
-                  res_df$df1 %in% c(3, 4) &
-                  res_df$df2 %in% c(2, 3) &
-                  res_df$dfh <= res_df$df2, ]
-
-case4 <- res_df[res_df$case == 4 &
-                  res_df$df1 %in% c(3, 4) &
-                  res_df$df2 %in% c(2, 3) &
-                  res_df$dfh <= res_df$df2, ]
-
-# Put all case-specific data frames into a named list -----------------------
-cases <- list(case1 = case1, case2 = case2, case3 = case3, case4 = case4)
-
-# Labels for dfh, df1, df2 used in the plots --------------------------------
-dfh_labels <- c(
-  "2" = expression(alpha[h] == 2),
-  "3" = expression(alpha[h] == 3),
-  "4" = expression(alpha[h] == 4)
-)
-df1_labels <- c(
-  "2" = expression(alpha[1] == 2),
-  "3" = expression(alpha[1] == 3),
-  "4" = expression(alpha[1] == 4)
-)
-df2_labels <- c(
-  "2" = expression(alpha[2] == 2),
-  "3" = expression(alpha[2] == 3),
-  "4" = expression(alpha[2] == 4)
-)
-
-# ---------------------------------------------------------------------------
-# Function to create scatter plots for confounder-test outcomes
-# ---------------------------------------------------------------------------
-
-plot_conf_test <- function(data, case_name) {
-  # Assign H0/H1 as labels based on conftest
-  data <- data %>%
-    mutate(
-      conftest_label = ifelse(conftest == 0, "H[0]", "H[1]"),
-      dfh_factor     = factor(dfh, levels = c(2, 3, 4),
-                              labels = c("2", "3", "4"))
+res_df_1$conftest<-ifelse(res_df_1$Tc > qnorm(0.95, 0, sqrt(1 / 12)),1,0)
+conf_plot_dat <- res_df_1 %>%
+  filter(
+    scenario %in% c("C", "D", "E", "F"),
+    df1 %in% c(4),
+    df2 %in% c(3)
+  ) %>%
+  mutate(
+    conftest      = ifelse(Tc > qnorm(0.95, 0, sqrt(1 / 12)), 1, 0),
+    conftest_label = ifelse(conftest == 0, "H[0]", "H[1]"),
+    # Szenariolabels mit Klammern
+    scenario_lab   = case_when(
+      scenario == "C" ~ "(C)",
+      scenario == "D" ~ "(D)",
+      scenario == "E" ~ "(E)",
+      scenario == "F" ~ "(F)"
     )
-  
-  # Facet labels for dfh (parsed math expressions) --------------------------
-  dfh_labels <- as_labeller(
-    c(
-      "2" = "alpha[h] == 2",
-      "3" = "alpha[h] == 3",
-      "4" = "alpha[h] == 4"
-    ),
-    default = label_parsed
   )
-  
-  # Plot 1: β_{H->X1} vs β_{H->X2}, faceted by dfh --------------------------
-  p1 <- ggplot(data, aes(x = beta_h1, y = beta_h2, color = conftest_label)) +
-    geom_point(size = 4) +
-    scale_color_manual(
-      values = c("H[0]" = "#1f78b4", "H[1]" = "orange"),
-      labels = c("H[0]" = expression(H[0]), "H[1]" = expression(H[1])),
-      name   = "Test Result"
-    ) +
-    facet_wrap(~ dfh_factor, labeller = dfh_labels) +
-    labs(
-      x = expression(beta["H 1"]),
-      y = expression(beta["H 2"])
-    ) +
-    theme_minimal() +
-    theme(text = element_text(size = 40))
-  
-  # Save plot 1 -------------------------------------------------------------
-  ggsave(
-    paste0("figures/tailh_", case_name, "_k39.pdf"),
-    plot   = p1,
-    device = "pdf",
-    width  = 14,
-    height = 5,
-    path   = simulation_path
-  )
-  
-  # Plot 2: same points but faceted by (df1, df2) grid ----------------------
-  p2 <- ggplot(data, aes(x = beta_h1, y = beta_h2, color = conftest_label)) +
-    geom_point(size = 4) +
-    scale_color_manual(
-      values = c("H[0]" = "#1f78b4", "H[1]" = "orange"),
-      labels = c("H[0]" = expression(H[0]), "H[1]" = expression(H[1])),
-      name   = "Test Result"
-    ) +
-    facet_grid(
-      factor(df1, levels = c(2, 3, 4), labels = df1_labels) ~
-        factor(df2, levels = c(2, 3, 4), labels = df2_labels),
-      labeller = label_parsed
-    ) +
-    labs(
-      x = expression(beta["H 1" ]),
-      y = expression(beta["H 2"])
-    ) +
-    theme_minimal() +
-    theme(text = element_text(size = 40))
-  
-  # Save plot 2 -------------------------------------------------------------
-  ggsave(
-    paste0("figures/tail12_", case_name, "_k39.pdf"),
-    plot   = p2,
-    device = "pdf",
-    width  = 14,
-    height = 10,
-    path   = simulation_path
-  )
-}
 
-# Loop over all four cases and create plots ---------------------------------
-for (case_name in names(cases)) {
-  plot_conf_test(cases[[case_name]], case_name)
-}
+p1<-ggplot(conf_plot_dat, aes(x = beta_h1, y = beta_h2, color = conftest_label)) +
+  geom_point(size = 4) +
+  scale_color_manual(
+    values = c("H[0]" = "#1f78b4", "H[1]" = "orange"),
+    labels = c("H[0]" = expression(H[0]), "H[1]" = expression(H[1])),
+    name   = "Test Result"
+  ) +
+  facet_wrap(
+    ~ factor(scenario_lab, levels = c("(C)", "(D)", "(E)", "(F)")),
+    ncol = 2
+  ) +
+  labs(
+    x = expression(beta["H 1"]),
+    y = expression(beta["H 2"])
+  ) +
+  theme_minimal() +
+  theme(text = element_text(size = 40))
+
+ggsave(
+  paste0("pics/conf_test_plot_k39.pdf"),
+  plot   = p1,
+  device = "pdf",
+  width  = 14,
+  height = 10,
+  path   = simulation_path
+)
+
+
+conf_plot_dat_2 <- res_df_1 %>%
+  filter(
+    scenario %in% c("B"),
+    df1 %in% c(3, 4),
+    df2 %in% c(2, 3)
+  ) %>%
+  mutate(
+    conftest       = ifelse(Tc > qnorm(0.95, 0, sqrt(1 / 12)), 1, 0),
+    conftest_label = ifelse(conftest == 0, "H[0]", "H[1]"),
+    df1_fac        = factor(df1, levels = c(3, 4),
+                            labels = c(expression(alpha[1] == 3),
+                                       expression(alpha[1] == 4))),
+    df2_fac        = factor(df2, levels = c(2, 3),
+                            labels = c(expression(alpha[2] == 2),
+                                       expression(alpha[2] == 3)))
+  )
+
+p2 <- ggplot(conf_plot_dat_2,
+             aes(x = beta1, y = beta_h2, color = conftest_label)) +
+  geom_point(size = 4) +
+  scale_color_manual(
+    values = c("H[0]" = "#1f78b4", "H[1]" = "orange"),
+    labels = c("H[0]" = expression(H[0]), "H[1]" = expression(H[1])),
+    name   = "Test Result"
+  ) +
+  facet_grid(df1_fac ~ df2_fac, labeller = label_parsed) +
+  labs(
+    x = expression(beta[12]),
+    y = ""
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 40),
+    axis.text.y  = element_blank(),  # keine Zahlen
+    axis.ticks.y = element_blank()   # keine Ticks
+  )
+p2
+ggsave(
+  paste0("pics/conf_test_plot_scen_B_k39.pdf"),
+  plot   = p2,
+  device = "pdf",
+  width  = 14,
+  height = 10,
+  path   = simulation_path
+)
 
 ################# Tail Test  ################################################
 
-
+res_df_1$indtest<-ifelse(res_df_1$Ti>55.44,1,0)
 
 # Hoga test evaluation: counts by (case, df1, df2, indtest) -----------------
-summary_df <- res_df %>%
-  group_by(case, df1, df2, indtest) %>%
+summary_df <- res_df_1 %>%
+  group_by(scenario, df1, df2, indtest) %>%
   summarise(count = n(), .groups = "drop") %>%
-  arrange(case, df1, df2, indtest)
+  arrange(scenario, df1, df2, indtest)
 
 # Wide format: columns "0" and "1" with counts ------------------------------
 summary_wide <- summary_df %>%
@@ -187,27 +227,29 @@ summary_wide <- summary_df %>%
 
 # Compute percentages of H0/H1 per (df1,df2,case) ---------------------------
 summary_pct <- summary_wide %>%
-  group_by(df1, df2, case) %>%
+  group_by(df1, df2, scenario) %>%
   summarise(
     total  = `0` + `1`,
     H0_pct = round(`0` / (`0` + `1`) * 100, 2),
     H1_pct = round(`1` / (`0` + `1`) * 100, 2),
     .groups = "drop"
   ) %>%
-  select(df1, df2, case, H0_pct, H1_pct) %>%
+  select(df1, df2, scenario, H0_pct, H1_pct) %>%
   pivot_wider(
-    names_from  = case,
+    names_from  = scenario,
     values_from = c(H0_pct, H1_pct),
-    names_sep   = "_Case"
+    names_sep   = "_Scenario"
   )
 
 # Reorder columns for LaTeX output ------------------------------------------
 summary_pct <- summary_pct[, c(
   "df1", "df2",
-  "H0_pct_Case1", "H1_pct_Case1",
-  "H0_pct_Case2", "H1_pct_Case2",
-  "H0_pct_Case3", "H1_pct_Case3",
-  "H0_pct_Case4", "H1_pct_Case4"
+  "H0_pct_ScenarioA", "H1_pct_ScenarioA",
+  "H0_pct_ScenarioB", "H1_pct_ScenarioB",
+  "H0_pct_ScenarioC", "H1_pct_ScenarioC",
+  "H0_pct_ScenarioD", "H1_pct_ScenarioD",
+  "H0_pct_ScenarioE", "H1_pct_ScenarioE",
+  "H0_pct_ScenarioF", "H1_pct_ScenarioF"
 )]
 
 # LaTeX table for Hoga test -------------------------------------------------
@@ -218,13 +260,13 @@ print(
 )
 
 # Indicator for tail test based on normality of Hill estimator --------------
-res_df$indtest2 <- as.numeric(res_df$p_val < 0.05)
+res_df_1$indtest2 <- as.numeric(res_df_1$p_val_hill < 0.05)
 
-# Counts by (case, df1, df2, indtest2) --------------------------------------
-summary_df <- res_df %>%
-  group_by(case, df1, df2, indtest2) %>%
+# Counts by (scenario, df1, df2, indtest2) --------------------------------------
+summary_df <- res_df_1 %>%
+  group_by(scenario, df1, df2, indtest2) %>%
   summarise(count = n(), .groups = "drop") %>%
-  arrange(case, df1, df2, indtest2)
+  arrange(scenario, df1, df2, indtest2)
 
 summary_wide <- summary_df %>%
   pivot_wider(
@@ -236,26 +278,28 @@ summary_wide <- summary_df %>%
 print(summary_wide, n = 108)
 
 summary_pct <- summary_wide %>%
-  group_by(df1, df2, case) %>%
+  group_by(df1, df2, scenario) %>%
   summarise(
     total  = `0` + `1`,
     H0_pct = round(`0` / (`0` + `1`) * 100, 2),
     H1_pct = round(`1` / (`0` + `1`) * 100, 2),
     .groups = "drop"
   ) %>%
-  select(df1, df2, case, H0_pct, H1_pct) %>%
+  select(df1, df2, scenario, H0_pct, H1_pct) %>%
   pivot_wider(
-    names_from  = case,
+    names_from  = scenario,
     values_from = c(H0_pct, H1_pct),
-    names_sep   = "_Case"
+    names_sep   = "_Scenario"
   )
 
 summary_pct <- summary_pct[, c(
   "df1", "df2",
-  "H0_pct_Case1", "H1_pct_Case1",
-  "H0_pct_Case2", "H1_pct_Case2",
-  "H0_pct_Case3", "H1_pct_Case3",
-  "H0_pct_Case4", "H1_pct_Case4"
+  "H0_pct_ScenarioA", "H1_pct_ScenarioA",
+  "H0_pct_ScenarioB", "H1_pct_ScenarioB",
+  "H0_pct_ScenarioC", "H1_pct_ScenarioC",
+  "H0_pct_ScenarioD", "H1_pct_ScenarioD",
+  "H0_pct_ScenarioE", "H1_pct_ScenarioE",
+  "H0_pct_ScenarioF", "H1_pct_ScenarioF"
 )]
 
 # LaTeX table for standard Hill test ----------------------------------------
@@ -263,5 +307,5 @@ print(
   xtable(summary_pct),
   include.rownames = FALSE,
   sanitize.text.function = identity
-
 )
+

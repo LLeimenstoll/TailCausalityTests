@@ -168,6 +168,5 @@ p1 <- ggplot(ctcs, aes(x = n, y = ctc, color = group)) +
 p1
 
 # Save plot as PNG ----------------------------------------------------------
-ggsave("figures/simulations_conv_t_conf.png", plot = p1, device = "png",
-
+ggsave("pics/simulations_conv_t_conf.png", plot = p1, device = "png",
        width = 14, height = 8, path = simulation_path)
