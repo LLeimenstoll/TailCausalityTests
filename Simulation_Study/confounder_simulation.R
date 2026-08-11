@@ -27,7 +27,7 @@ for (df in dfs) {
   for (i in 1:rounds) {
     print(i)
     
-    # Potential confounder H (commented out here, use for case 4) -----------
+    # Potential confounder H (commented out here) -----------
     # H <- rt(n, 2)
     
     df1 <- df[1]
@@ -36,7 +36,7 @@ for (df in dfs) {
     # Structural coefficient for X2 <- X1 -----------------------------------
     beta_1 <- runif(1, 0.1, 0.9)
     
-    # Coefficients for confounder H (use for case 4) ------------------------
+    # Coefficients for confounder H  ------------------------
     # beta_h1 <- runif(1, 0.1, 0.9)
     # beta_h2 <- runif(1, 0.1, 0.9)
     
@@ -44,7 +44,7 @@ for (df in dfs) {
     e1 <- rt(n, df1)
     e2 <- rt(n, df2)
     
-    # With confounder (use for case 4) -------------------------------------
+    # With confounder  -------------------------------------
     # X1 <- e1 + beta_h1 * H
     # X2 <- e2 + beta_1 * X1 + beta_h2 * H
     
@@ -90,7 +90,7 @@ results1 <- read.csv(file = paste0(simulation_path, "output/results_confounder_t
 results2 <- read.csv(file = paste0(simulation_path, "output/results_confounder_test_with_confs.csv"))
 
 # ---------------------------------------------------------------------------
-# Case C: No confounder. Plot Type I error of confounder test vs k.
+# Case B: No confounder. Plot Type I error of confounder test vs k.
 # ---------------------------------------------------------------------------
 
 # Create grouping variable based on (df1, df2) --------------------------------
@@ -128,11 +128,11 @@ p1 <- ggplot(summary_df,
   theme(text = element_text(size = 40))
 p1
 
-ggsave("pics/confounder_test_sim_caseC.pdf", plot = p1, device = "pdf",
+ggsave("pics/confounder_test_sim_caseB.pdf", plot = p1, device = "pdf",
        width = 14, height = 8, path = simulation_path)
 
 # ---------------------------------------------------------------------------
-# Case D: With confounder. Plot Type II error vs k.
+# Case F: With confounder. Plot Type II error vs k.
 # ---------------------------------------------------------------------------
 
 results3 <- results2 %>%
@@ -163,5 +163,5 @@ p2 <- ggplot(summary_df,
   theme(text = element_text(size = 40))
 p2
 
-ggsave("pics/confounder_test_sim_caseD.pdf", plot = p2, device = "pdf",
+ggsave("pics/confounder_test_sim_caseF.pdf", plot = p2, device = "pdf",
        width = 14, height = 8, path = simulation_path)
