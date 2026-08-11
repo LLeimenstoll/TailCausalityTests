@@ -1,6 +1,6 @@
 # TailCausalityTests
 
-Code for the paper **"General tests for pairwise causality in extremes"** by Lisa Leimenstoll and Melanie Schienle.
+Code for the paper **"Identification and Inference for Causal Effects in Extremes under General Conditions"** by Lisa Leimenstoll and Melanie Schienle.
 
 It includes:
 - Simulation studies for causal tail tests in R in `Siumlation_Study/`,
@@ -8,7 +8,8 @@ It includes:
 
 ## Abstract 
 
-Recent flooding and heat waves as well as financial and economic crises have highlighted the need for a better understanding of climate and market extremes. We are particularly interested in the causal effects between pairwise tail events as measured by the Causal Tail Coefficient, CTC (see Gnecco et al. (2021)). We contribute to the literature with theoretical results for the CTC in settings where the involved tail distributions differ, as is typically the case in practice. Building on these results, we propose tail tests that can uncover different underlying scenarios and make it possible to detect the presence and direction of causal tail effects, as well as reveal confounding effects when tail indices differ. With a comprehensive simulation study, we investigate the reliability of the asymptotic guidance in finite samples. Finally, we exploit the generality of the theoretical results to study causal tail effects in three different application scenarios covering weather/climate and financial markets.
+Understanding the propagation of extreme events is important in many economic and environmental applications, yet most econometric methods for causal inference focus on average effects rather than tail behavior. This paper studies the identification of causal relations in extremes within a linear structural causal model associated with a directed acyclic graph. We analyze the asymptotic behavior of the Causal Tail Coefficient (CTC), a measure of causal dependence between extreme realizations of variables, when the innovations of the structural model follow regularly varying distributions. In contrast to the existing literature, we allow the variables in the system to exhibit heterogeneous tail indices and consider the presence of potentially heavy-tailed unobserved confounders. We derive theoretical results characterizing the limiting behavior of the CTC under these conditions and show how differences in tail behavior can provide identifying information about the 
+causal structure. Based on these results, we propose a testing framework that distinguishes direct causal effects from confounding in heavy-tailed environments. The finite-sample performance of the proposed methodology is investigated through simulation studies and illustrated using applications to climate and financial data. The results demonstrate that causal relations among extreme events can be identified under the proposed assumptions, even when variables exhibit substantially different tail behavior.
 
 ---
 
@@ -29,25 +30,22 @@ The R code is organized as follows:
 The following scripts in `Application/Simulation_Study/` generate the results reported in Section 3 of the paper, ordered according to the section numbering:
 
 - `convergence_simulation.R`  
-  Produces the results in **Section 3.1 (Finite sample rate of convergence)**.
+  Produces the results in **Section 5.2 (CTC Estimates: Finite-Sample Rate of Convergence)**.
 
 - `simulation_study_configurations.R`  
-  Generates the simulation data for **Section 3.2 (Test evaluation for different configurations)**.
+  Generates the simulation data for **Section 5.3 (Finite-Sample Performance of the Proposed Tests)**.
 
 - `simulation_study_configurations_evaluation.R`  
-  Produces the results and plots for **Section 3.2 (Test evaluation for different configurations)**.
-
-- `pretest_simulation.R`  
-  Produces the results in **Section 3.2.2 (Pre-test simulation)**.
+  Produces the results and plots for **Section 5.3 (Finite-Sample Performance of the Proposed Tests)**.
 
 - `confounder_simulation.R`  
-  Produces the results in **Section 3.2.2 (Confounder test simulation)**.
+  Produces the results in **5.3.3 (Confounder-Test)**.
 
 - `k_simulation.R`  
-  Produces the results in **Section 3.3 (Choice of the best value of k)**.
+  Produces the results in **5.1 (Choice of the Tuning Parameter k: Independent Pre-Study)**.
 
 - `lingam_pretest_comp.R`  
-  Produces the results in **Section 3.4 (Comparison of methods capturing causality in the mean)**.
+  Produces the results in **Section 5.2 (CTC Estimates: Finite-Sample Rate of Convergence)**.
 
 ---
 
@@ -55,7 +53,7 @@ The following scripts in `Application/Simulation_Study/` generate the results re
 
 This repository contains three main applications of the causal tail tests, each based on external data sources. The code in this repository does **not** redistribute the raw data. Instead, we provide scripts to download (where possible) or describe how to obtain the data, and to reproduce the preprocessing steps.
 
-### 1. Precipitation and train delays in Switzerland
+### 1. Precipitation and Train Delays in Switzerland
 
 - **Train departure times**  
   Open public transport data from:
@@ -80,7 +78,7 @@ The final merged dataset is written as `Application/data/data_combined_train_wea
 
 ---
 
-### 2. Precipitation and river discharges (Bavaria, Germany)
+### 2. Precipitation and River Flows (Bavaria, Germany)
 
 - **River discharge**  
   - Bayerisches Landesamt für Umwelt (LfU): https://www.lfu.bayern.de  
@@ -102,7 +100,7 @@ The corresponding R code can be found in:
 
 ---
 
-### 3. Financial stock markets and cryptocurrencies
+### 3. Financial Stock Markets and Cryptocurrencies
 
 - **S&P 500 index prices (open, close)**  
   - Yahoo Finance: https://finance.yahoo.com  
